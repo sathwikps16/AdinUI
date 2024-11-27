@@ -1,0 +1,130 @@
+/* KnowledgeBase.css */
+
+/* General styles for the KnowledgeBase section */
+.knowledge-base-container {
+    background-color: #f8fafc;
+    /* Light gray background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.knowledge-base-form {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Header Styles */
+.knowledge-base-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.knowledge-base-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.knowledge-base-header p {
+    color: #4a5568;
+}
+
+/* Form element styles */
+label {
+    font-size: 14px;
+    color: #4a5568;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+input[type="file"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background-color: #f7fafc;
+    font-size: 14px;
+    color: #2d3748;
+    margin-bottom: 15px;
+}
+
+input[type="file"]:focus,
+select:focus {
+    outline: none;
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.4);
+}
+
+/* Success/Error message styling */
+.message {
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.message-success {
+    background-color: #e6fffa;
+    color: #38a169;
+}
+
+.message-error {
+    background-color: #fff5f5;
+    color: #e53e3e;
+}
+
+/* Button styling */
+button[type="submit"] {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    border-radius: 6px;
+    background-color: #3182ce;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    background-color: #2b6cb0;
+}
+
+button[type="submit"]:disabled {
+    background-color: #e2e8f0;
+    cursor: not-allowed;
+}
+
+.animate-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.min-h-screen bg-gray-100 flex items-center justify-center p-4{
+    margin-left: 100px;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.75;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.75;
+    }
+}
