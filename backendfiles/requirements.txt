@@ -1,0 +1,11 @@
+Flask
+Flask-Cors
+werkzeug
+pymilvus
+sentence-transformers
+PyPDF2
+fpdf
+numpy
+python-docx
+git+https://github.com/openai/CLIP.git
+
