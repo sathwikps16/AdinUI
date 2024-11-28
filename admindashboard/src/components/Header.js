@@ -1,7 +1,9 @@
 //Header.js
 
 import React from 'react';
-
+import profile from '../img/profile.png'
+import search from '../img/search.png'
+import notification from '../img/notification.png'
 const Header = () => {
     return (
         <header>
@@ -13,8 +15,7 @@ const Header = () => {
                 <input type="text"
                     placeholder="Search" />
                 <div class="searchbtn">
-                    <img src=
-                        "https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+                    <img src={search}
                         class="icn srchicn"
                         alt="search-icon" />
                 </div>
@@ -22,13 +23,11 @@ const Header = () => {
 
             <div class="message">
                 <div class="circle"></div>
-                <img src=
-                    "https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png"
+                <img src={notification}
                     class="icn"
                     alt="" />
                 <div class="dp">
-                    <img src=
-                        "https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
+                    <img src={profile}                        
                         class="dpicn"
                         alt="dp" />
                 </div>

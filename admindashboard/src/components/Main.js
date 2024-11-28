@@ -16,7 +16,7 @@ const Main = () => {
                 <input type="text" name="search" id="search" placeholder="Search" />
                 <div className="searchbtn">
                     <img
-                        src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+                        src="../img/search.png"
                         className="icn srchicn"
                         alt="search-button"
                     />

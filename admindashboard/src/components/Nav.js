@@ -1,59 +1,48 @@
-// Nav.js
 import React from 'react';
 import { Link } from 'react-router-dom';
+import upload from '../img/upload.png';
+import home from '../img/dashboard_icon.png';
+import ticket from '../img/ticket.png';
 
 const Nav = () => {
     return (
         <div className="navcontainer">
             <nav className="nav">
                 <div className="nav-upper-options">
+                    {/* Dashboard */}
                     <div className="nav-option option1">
                         <img
-                            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
+                            src={home}
                             className="nav-img"
-                            alt="dashboard"
+                            alt="Dashboard"
                         />
                         <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
                             <h3>Dashboard</h3>
                         </Link>
                     </div>
 
-                    <div className="nav-option option2" >
+                    {/* Document Upload */}
+                    <div className="nav-option option2">
                         <img
-                            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png"
+                            src={upload}
                             className="nav-img"
-                            alt="Knowledge Base"
+                            alt="Document Upload"
                         />
-                        <Link to="/knowledge-base" style={{ textDecoration: 'none', color: 'black'}}>
-                            <h3>Knowledge Base</h3>
+                        <Link to="/knowledge-base" style={{ textDecoration: 'none', color: 'black' }}>
+                            <h3>Document Upload</h3>
                         </Link>
                     </div>
 
+                    {/* Ticketing System */}
                     <div className="nav-option option3">
                         <img
-                            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png"
+                            src={ticket}
                             className="nav-img"
-                            alt="All integrations"
+                            alt="Ticketing System"
                         />
-                        <h3>Integrations</h3>
-                    </div>
-
-                    <div className="nav-option option4">
-                        <img
-                            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/4.png"
-                            className="nav-img"
-                            alt="settings"
-                        />
-                        <h3>Settings</h3>
-                    </div>
-
-                    <div className="nav-option logout">
-                        <img
-                            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png"
-                            className="nav-img"
-                            alt="logout button"
-                        />
-                        <h3>Logout</h3>
+                        <Link to="/ticket-system" style={{ textDecoration: 'none', color: 'black' }}>
+                            <h3 style={{ margin: 0, cursor: 'pointer' }}>Ticketing System</h3>
+                        </Link>
                     </div>
                 </div>
             </nav>
