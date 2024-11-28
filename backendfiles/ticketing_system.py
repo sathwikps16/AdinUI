@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS #chnage
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3002"}}) #change  
+
 
 # Configure the database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/ticketing_system_db'
