@@ -19,10 +19,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .card:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
@@ -38,38 +40,29 @@
     font-weight: bold;
 }
 
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: popIn 0.3s ease;
-}
-
-.modal-content h2 {
-    margin-bottom: 20px;
-}
-
-.modal-content label {
+/* Styles for the card-details only when the card is active */
+.card.active .card-details {
     display: block;
-    margin-bottom: 15px;
-    font-size: 14px;
 }
 
-.modal-content input {
+.card-details {
+    display: none; /* Hide details by default */
+    background: #eef7ff;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.3s ease;
+}
+
+.card-details label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.card-details input {
     width: 100%;
     padding: 8px;
     font-size: 14px;
@@ -78,32 +71,36 @@
     margin-top: 5px;
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.modal-actions button {
+.card-details button {
     padding: 10px 20px;
     font-size: 14px;
     border: none;
     border-radius: 5px;
+    background: #007bff;
+    color: #fff;
     cursor: pointer;
     transition: background 0.3s ease;
+    margin-top: 10px;
 }
 
-.modal-actions button:hover {
-    background: #ddd;
+.card-details button:hover {
+    background: #0056b3;
 }
 
-@keyframes popIn {
+.card.active {
+    background: #eef7ff;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Animation for sliding down */
+@keyframes slideDown {
     from {
-        transform: scale(0.8);
+        transform: translateY(-10%);
         opacity: 0;
     }
     to {
-        transform: scale(1);
+        transform: translateY(0);
         opacity: 1;
     }
 }
