@@ -9,3 +9,5 @@ numpy
 python-docx
 Pillow
 git+https://github.com/openai/CLIP.git
+flask_sqlalchemy
+pymysql
