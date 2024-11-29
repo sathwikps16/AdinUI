@@ -1,3 +1,5 @@
+// Ticket System
+
 import React, { useState } from 'react';
 import search from '../img/servicenow.png';
 import zendesk from '../img/zendesk.png';
@@ -67,6 +69,20 @@ const Ticket = () => {
                     <img src={zendesk} alt="Zendesk" />
                     <p>Zendesk</p>
                 </div>
+
+                {/* Remedyforce */}
+                <div className="card" onClick={() => openModal('Zendesk')}>
+                    <img src={zendesk} alt="Remedyforce" />
+                    <p>Zendesk</p>
+                </div>
+
+                {/* Jira */}
+                <div className="card" onClick={() => openModal('Zendesk')}>
+                    <img src={zendesk} alt="Jira" />
+                    <p>Zendesk</p>
+                </div>
+
+                
             </div>
 
             {/* Modal Section */}
