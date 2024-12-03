@@ -574,3 +574,56 @@ header {
         width: 180px;
     }
 }
+
+.ticket-container {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+}
+
+.auth-form, .instance-url-form {
+    margin: 20px auto;
+}
+
+.auth-form input, .instance-url-form input {
+    display: block;
+    margin: 10px auto;
+    padding: 8px;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.card {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    max-width: 80px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

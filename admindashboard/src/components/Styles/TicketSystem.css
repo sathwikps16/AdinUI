@@ -1,117 +1,79 @@
+/* Container styling */
 .ticket-container {
     text-align: center;
     padding: 20px;
-}
-
-.cards {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.card {
-    background: #f9f9f9;
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 50px auto;
     border: 1px solid #ddd;
     border-radius: 10px;
-    padding: 10px;
-    width: 200px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
-.card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+/* Step sections */
+.dropdown-step, .credentials-step, .success-step {
+    margin-top: 20px;
 }
 
-.card img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-.card p {
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* Styles for the card-details only when the card is active */
-.card.active .card-details {
+label {
     display: block;
-}
-
-.card-details {
-    display: none; /* Hide details by default */
-    background: #eef7ff;
-    padding: 15px;
-    margin-top: 10px;
-    border-radius: 5px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    animation: slideDown 0.3s ease;
-}
-
-.card-details label {
-    display: block;
-    margin-bottom: 10px;
+    margin: 15px 0 5px;
     font-size: 14px;
     font-weight: bold;
+    text-align: left;
 }
 
-.card-details input {
+input, select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
-.card-details button {
+button {
     padding: 10px 20px;
     font-size: 14px;
     border: none;
     border-radius: 5px;
     background: #007bff;
-    color: #fff;
+    color: white;
     cursor: pointer;
     transition: background 0.3s ease;
-    margin-top: 10px;
+    width: 100%;
 }
 
-.card-details button:hover {
+button:hover {
     background: #0056b3;
 }
 
-.card.active {
-    background: #eef7ff;
-    border-color: #007bff;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }
 
-/* Animation for sliding down */
-@keyframes slideDown {
-    from {
-        transform: translateY(-10%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+/* Dropdown step: Add spacing for the dropdown */
+.dropdown-step select {
+    margin-top: 10px;
 }
 
+/* Success step styling */
+.success-step h2 {
+    color: #28a745;
+    font-size: 20px;
+}
+
+.success-step p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-    .cards {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .card {
+    .ticket-container {
         width: 90%;
+        padding: 15px;
     }
 }
