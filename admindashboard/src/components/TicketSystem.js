@@ -36,12 +36,16 @@ const Ticket = () => {
     };
 
     const handleUrlValidation = () => {
-        if (instanceUrl) {
+        if (instanceUrl && credentials.username && credentials.password) {
             setLoading(true);
             fetch("http://127.0.0.1:5000/validate-url", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ instance_url: instanceUrl }),
+                body: JSON.stringify({
+                    instance_url: instanceUrl,
+                    username: credentials.username,
+                    password: credentials.password,
+                }),
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -58,7 +62,7 @@ const Ticket = () => {
                     alert("Error connecting to the server.");
                 });
         } else {
-            alert("Please enter a valid URL.");
+            alert("Please enter a valid URL, username, and password.");
         }
     };
 

@@ -5,15 +5,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Static credentials
-STATIC_USERNAME = "admin"
-STATIC_PASSWORD = "@Shyam2610"
-
-def validate_servicenow_instance(url):
+def validate_servicenow_instance(url, username, password):
     # Use the incident API as a check for ServiceNow instance validation
     api_url = f"{url}/api/now/table/incident"
     try:
-        response = requests.get(api_url, auth=(STATIC_USERNAME, STATIC_PASSWORD), timeout=5)
+        response = requests.get(api_url, auth=(username, password), timeout=5)
         # If status code is 200, the URL is valid
         if response.status_code == 200:
             return True
@@ -30,8 +26,8 @@ def authenticate():
     username = data.get("username")
     password = data.get("password")
 
-    # Check static credentials
-    if username == STATIC_USERNAME and password == STATIC_PASSWORD:
+    # Validate the credentials (for this example, we are assuming any non-empty username/password is valid)
+    if username and password:
         return jsonify({"success": True, "message": "Authenticated successfully!"})
     return jsonify({"success": False, "message": "Invalid username or password."})
 
@@ -39,9 +35,11 @@ def authenticate():
 def validate_url():
     data = request.json
     instance_url = data.get("instance_url")
+    username = data.get("username")
+    password = data.get("password")
     
-    # Validate the ServiceNow URL
-    if validate_servicenow_instance(instance_url):
+    # Validate the ServiceNow URL using the provided credentials
+    if validate_servicenow_instance(instance_url, username, password):
         return jsonify({"success": True, "message": "Valid ServiceNow instance!"})
     else:
         return jsonify({"success": False, "message": "Invalid ServiceNow instance URL."})
