@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from sqlalchemy import event
 from dotenv import set_key, load_dotenv
 import os
  
@@ -9,7 +8,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
  
 # Configure the database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://bhuvan:1234@10.1.7.137/ticketing_system_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/ticketing_system_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
  
 # Initialize the SQLAlchemy object
@@ -34,16 +33,6 @@ def update_env_file(service_name, instance_url):
     # Update or create environment variables
     set_key(env_path, "SERVICE_NAME", service_name)
     set_key(env_path, "INSTANCE_URL", instance_url)
- 
-# Event listener to automatically update .env when the database is modified
-@event.listens_for(TicketingSystem, 'after_insert')
-@event.listens_for(TicketingSystem, 'after_update')
-def update_env_after_db_change(mapper, connection, target):
-    """
-    This function is triggered after an insert or update on the TicketingSystem table.
-    """
-    update_env_file(target.service_name, target.instance_url)
-    print(f".env file updated with Service_name: {target.service_name}, Instance_URL: {target.instance_url}")
  
 # Route to add or update a ticketing system
 @app.route('/ticketing-system', methods=['POST'])
@@ -72,7 +61,10 @@ def add_or_update_ticketing_system():
     try:
         # Commit to save the data
         db.session.commit()
- 
+
+        # Manually update the .env file
+        update_env_file(service_name, instance_url)
+
         return jsonify({"message": "Ticketing system added/updated successfully"}), 200
     except Exception as e:
         # Handle errors, e.g., if the data violates unique constraints
@@ -82,5 +74,3 @@ def add_or_update_ticketing_system():
 # Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-    
- 
