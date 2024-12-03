@@ -2,75 +2,63 @@ import React, { useState } from "react";
 import "./Styles/TicketSystem.css";
 
 const Ticket = () => {
-    const [system, setSystem] = useState(""); // Selected system
+    const [system, setSystem] = useState("ServiceNow"); // Fixed to ServiceNow
     const [credentials, setCredentials] = useState({ username: "", password: "" });
-    const [instanceUrl, setInstanceUrl] = useState(""); // Instance URL
-    const [step, setStep] = useState(1); // 1: System Select, 2: Auth, 3: URL Validation
-    const [loading, setLoading] = useState(false);
+    const [instanceUrl, setInstanceUrl] = useState(""); // Store the instance URL
     const [authSuccess, setAuthSuccess] = useState(false); // Track authentication status
-    const [urlValid, setUrlValid] = useState(false); // Track URL validation status
-
-    const ticketingSystems = ["ServiceNow", "Zendesk", "Jira", "Remedyforce"];
+    const [loading, setLoading] = useState(false);
+    const [step, setStep] = useState(1); // Track the current step (1: Auth, 2: Instance URL, 3: Save)
+    const [urlError, setUrlError] = useState(""); // Track URL error message
 
     const handleAuthSubmit = () => {
         setLoading(true);
         fetch("http://127.0.0.1:5000/authenticate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...credentials, system }),
+            body: JSON.stringify({
+                system,
+                username: credentials.username,
+                password: credentials.password
+            }),
         })
             .then((res) => res.json())
             .then((data) => {
                 setLoading(false);
                 if (data.success) {
                     setAuthSuccess(true);
-                    setTimeout(() => setStep(3), 2000); // Proceed to URL validation step
+                    setStep(2); // Move to Instance URL step
+                    alert("Authentication successful!");
                 } else {
+                    setAuthSuccess(false);
                     alert(data.message);
                 }
             })
-            .catch((error) => {
+            .catch(() => {
                 setLoading(false);
-                alert("Authentication failed. Please try again.");
+                alert("Authentication failed due to a server error. Please try again.");
             });
     };
 
-    const handleUrlValidation = () => {
-        if (instanceUrl && credentials.username && credentials.password) {
-            setLoading(true);
-            fetch("http://127.0.0.1:5000/validate-url", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    instance_url: instanceUrl,
-                    username: credentials.username,
-                    password: credentials.password,
-                }),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setLoading(false);
-                    if (data.success) {
-                        setUrlValid(true);
-                        alert("Instance URL validated successfully!");
-                    } else {
-                        alert("Invalid Instance URL.");
-                    }
-                })
-                .catch((error) => {
-                    setLoading(false);
-                    alert("Error connecting to the server.");
-                });
-        } else {
-            alert("Please enter a valid URL, username, and password.");
-        }
-    };
-
     const handleSave = () => {
+        // Validate URL format
+        const urlRegex = /^(https?:\/\/)?([\w\d\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+        if (!urlRegex.test(instanceUrl)) {
+            setUrlError("Please enter a valid URL.");
+            return;
+        }
+
+        setUrlError(""); // Clear error if URL is valid
+
         fetch("http://127.0.0.1:5000/save", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ system, instanceUrl }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('auth_token')}` // Store JWT in localStorage
+            },
+            body: JSON.stringify({
+                system,
+                instance_url: instanceUrl,
+            }),
         })
             .then((res) => res.json())
             .then((data) => {
@@ -80,33 +68,15 @@ const Ticket = () => {
                     alert("Error saving data.");
                 }
             })
-            .catch((error) => alert("Error connecting to the server."));
+            .catch(() => alert("Error connecting to the server."));
     };
 
     return (
         <div className="ticket-container">
-            <h1>Ticketing System</h1>
+            <h1>ServiceNow Admin Portal</h1>
 
+            {/* Step 1: Authentication */}
             {step === 1 && (
-                <div className="dropdown-step">
-                    <label>
-                        Select Ticketing System:
-                        <select value={system} onChange={(e) => setSystem(e.target.value)}>
-                            <option value="">-- Select --</option>
-                            {ticketingSystems.map((sys) => (
-                                <option key={sys} value={sys}>
-                                    {sys}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <button onClick={() => system && setStep(2)} disabled={!system}>
-                        Next
-                    </button>
-                </div>
-            )}
-
-            {step === 2 && (
                 <div className="credentials-step">
                     <label>
                         Username:
@@ -133,11 +103,11 @@ const Ticket = () => {
                     ) : (
                         <button onClick={handleAuthSubmit}>Authenticate</button>
                     )}
-                    {authSuccess && <div className="success-animation">Authentication Successful!</div>}
                 </div>
             )}
 
-            {step === 3 && (
+            {/* Step 2: Instance URL Input */}
+            {step === 2 && authSuccess && (
                 <div className="url-step">
                     <label>
                         Instance URL:
@@ -147,14 +117,12 @@ const Ticket = () => {
                             onChange={(e) => setInstanceUrl(e.target.value)}
                         />
                     </label>
-                    <button onClick={handleUrlValidation}>Validate URL</button>
-                    {urlValid && (
-                        <button onClick={handleSave} className="save-button">
-                            Save
-                        </button>
-                    )}
+                    {urlError && <div className="error-message">{urlError}</div>}
+                    <button onClick={handleSave}>Save</button>
                 </div>
             )}
+
+            {authSuccess && <div className="success-message">Welcome, Admin!</div>}
         </div>
     );
 };

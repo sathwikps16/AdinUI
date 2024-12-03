@@ -11,3 +11,4 @@ Pillow
 git+https://github.com/openai/CLIP.git
 flask_sqlalchemy
 pymysql
+flask-jwt-extended
