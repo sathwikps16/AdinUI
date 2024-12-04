@@ -18,8 +18,8 @@ jwt = JWTManager(app)
 # Database connection setup
 def get_db_connection():
     return mysql.connector.connect(
-        host="10.1.7.137",
-        user="bhuvan",
+        host="localhost",
+        user="root",
         password="1234",
         database="ticketing_system_db"
     )
@@ -59,7 +59,7 @@ def save():
     system = data.get("system")
     username = get_jwt_identity()
     password = data.get("password")  
-    hash_password = PasswordEncrypter.hash_password(password)
+    encryp_password = PasswordEncrypter.encrypt_password(password)
 
     if not all([instance_url, system, password]):
         return jsonify({"success": False, "message": "Missing instance URL, system, or password"}), 400
@@ -71,7 +71,7 @@ def save():
             INSERT INTO Ticketing_System (Service_name, Instance_URL, Admin_ID, Password)
             VALUES (%s, %s, %s, %s)
         """
-        cursor.execute(query, (system, instance_url, username, hash_password))
+        cursor.execute(query, (system, instance_url, username, encryp_password))
         conn.commit()
         conn.close()
         return jsonify({"success": True, "message": "Data saved successfully"}), 200
