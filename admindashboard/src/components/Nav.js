@@ -29,7 +29,7 @@ const Nav = () => {
                             alt="Document Upload"
                         />
                         <Link to="/knowledge-base" style={{ textDecoration: 'none', color: 'black' }}>
-                            <h3>Document Upload</h3>
+                            <h3>Knowledge Base</h3>
                         </Link>
                     </div>
 

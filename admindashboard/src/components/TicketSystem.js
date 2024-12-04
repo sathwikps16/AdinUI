@@ -1,3 +1,5 @@
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 import React, { useState } from "react";
 import "./Styles/TicketSystem.css";
 
@@ -42,10 +44,9 @@ const Ticket = () => {
     };
 
     const handleSave = () => {
-        // Updated validation logic
-        const urlRegex = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
-        if (instanceUrl.indexOf("www.") > -1 || !urlRegex.test(instanceUrl)) {
-            setUrlError("Please enter a valid URL (e.g., https://example.com).");
+        const urlRegex = /^(https?:\/\/)?([\w\d\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+        if (!urlRegex.test(instanceUrl)) {
+            setUrlError("Please enter a valid URL.");
             return;
         }
 
