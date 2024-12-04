@@ -1,3 +1,5 @@
+# This code is responsible for checking wether any kind of data is inserted into the databbase and if inserted then update the env file 
+
 from pymysqlreplication import BinLogStreamReader
 from pymysqlreplication.row_event import WriteRowsEvent
 import logging
