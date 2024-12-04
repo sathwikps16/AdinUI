@@ -1,8 +1,10 @@
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 import React, { useState } from "react";
 import "./Styles/TicketSystem.css";
 
 const Ticket = () => {
-    const [system, setSystem] = useState("ServiceNow"); // Fixed to ServiceNow
+    const [system] = useState("ServiceNow"); // Fixed to ServiceNow
     const [credentials, setCredentials] = useState({ username: "", password: "" });
     const [instanceUrl, setInstanceUrl] = useState(""); // Store the instance URL
     const [authSuccess, setAuthSuccess] = useState(false); // Track authentication status
@@ -18,13 +20,15 @@ const Ticket = () => {
             body: JSON.stringify({
                 system,
                 username: credentials.username,
-                password: credentials.password
+                password: credentials.password,
             }),
         })
             .then((res) => res.json())
             .then((data) => {
                 setLoading(false);
                 if (data.success) {
+                    localStorage.setItem("auth_token", data.token); // Store token
+                    localStorage.setItem("password", credentials.password); // Store password
                     setAuthSuccess(true);
                     setStep(2); // Move to Instance URL step
                     alert("Authentication successful!");
@@ -40,7 +44,6 @@ const Ticket = () => {
     };
 
     const handleSave = () => {
-        // Validate URL format
         const urlRegex = /^(https?:\/\/)?([\w\d\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
         if (!urlRegex.test(instanceUrl)) {
             setUrlError("Please enter a valid URL.");
@@ -53,11 +56,12 @@ const Ticket = () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem('auth_token')}` // Store JWT in localStorage
+                Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
             },
             body: JSON.stringify({
                 system,
                 instance_url: instanceUrl,
+                password: localStorage.getItem("password"), // Use saved password
             }),
         })
             .then((res) => res.json())
@@ -65,7 +69,7 @@ const Ticket = () => {
                 if (data.success) {
                     alert("Data saved successfully!");
                 } else {
-                    alert("Error saving data.");
+                    alert(data.message);
                 }
             })
             .catch(() => alert("Error connecting to the server."));
@@ -75,7 +79,6 @@ const Ticket = () => {
         <div className="ticket-container">
             <h1>ServiceNow Admin Portal</h1>
 
-            {/* Step 1: Authentication */}
             {step === 1 && (
                 <div className="credentials-step">
                     <label>
@@ -106,7 +109,6 @@ const Ticket = () => {
                 </div>
             )}
 
-            {/* Step 2: Instance URL Input */}
             {step === 2 && authSuccess && (
                 <div className="url-step">
                     <label>
