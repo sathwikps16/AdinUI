@@ -13,3 +13,4 @@ flask_sqlalchemy
 pymysql
 flask-jwt-extended
 mysql-connector-python
+py-bcrypt
