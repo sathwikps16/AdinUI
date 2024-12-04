@@ -24,45 +24,32 @@ def get_db_connection():
         database="ticketing_system_db"
     )
 
-# Authentication validator for ServiceNow
-def validate_servicenow_credentials(username, password):
-    try:
-        api_url = "https://dev261475.service-now.com/api/now/table/incident"
-        response = requests.get(api_url, auth=(username, password), timeout=10)
-        if response.status_code == 200:
-            return True, [{"name": "Production Instance", "url": "https://dev261475.service-now.com"}]
-        elif response.status_code == 401:
-            return False, "Invalid ServiceNow credentials"
-        else:
-            return False, f"ServiceNow responded with status code {response.status_code}"
-    except requests.exceptions.RequestException as e:
-        return False, f"Error connecting to ServiceNow: {e}"
-
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
     data = request.json
-    system = data.get("system")
+    instance_url = data.get("instanceUrl")
     username = data.get("username")
     password = data.get("password")
 
-    if not all([system, username, password]):
-        return jsonify({"success": False, "message": "Missing system, username, or password"}), 400
+    if not all([instance_url, username, password]):
+        return jsonify({"success": False, "message": "Missing instance URL, username, or password"}), 400
 
-    if system != "ServiceNow":
-        return jsonify({"success": False, "message": "Unsupported ticketing system"}), 400
-
-    is_valid, message_or_instances = validate_servicenow_credentials(username, password)
-    if is_valid:
-        access_token = create_access_token(identity=username)
-        return jsonify({
-            "success": True,
-            "message": "Authentication successful",
-            "token": access_token,
-            "instances": message_or_instances,
-            "password": password  # Pass the password for the save request
-        }), 200
-
-    return jsonify({"success": False, "message": message_or_instances}), 401
+    try:
+        response = requests.get(f"{instance_url}/api/now/table/incident", auth=(username, password), timeout=10)
+        if response.status_code == 200:
+            access_token = create_access_token(identity=username)
+            return jsonify({
+                "success": True,
+                "message": "Authentication successful",
+                "token": access_token,
+                "password": password  # Sent back for frontend use
+            }), 200
+        elif response.status_code == 401:
+            return jsonify({"success": False, "message": "Invalid credentials"}), 401
+        else:
+            return jsonify({"success": False, "message": f"ServiceNow responded with status code {response.status_code}"}), 400
+    except requests.exceptions.RequestException as e:
+        return jsonify({"success": False, "message": f"Error connecting to ServiceNow: {e}"}), 500
 
 @app.route('/save', methods=['POST'])
 @jwt_required()
@@ -71,7 +58,7 @@ def save():
     instance_url = data.get("instance_url")
     system = data.get("system")
     username = get_jwt_identity()
-    password = data.get("password")  # Password from the authenticate step
+    password = data.get("password")  
     hash_password = PasswordEncrypter.hash_password(password)
 
     if not all([instance_url, system, password]):
@@ -93,4 +80,3 @@ def save():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
