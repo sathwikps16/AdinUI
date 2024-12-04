@@ -5,8 +5,10 @@ import Nav from './components/Nav';
 import Main from './components/Main';
 import KnowledgeBase from './components/KnowledgeBase';
 import TicketSystem from './components/TicketSystem'
+// import TicketChoose from './components/TicketChoose';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { MyContextProvider } from './components/MyContext';  // Import the context provider
+import { MyContextProvider } from './components/MyContext';  
+import TicketChoose from './components/TicketChoose';
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Main />} />
               <Route path="/knowledge-base" element={<KnowledgeBase />} />
+              {/* <Route path="/ticket-choose" element={<TicketChoose />} /> */}
               <Route path="/ticket-system" element={<TicketSystem />} />
             </Routes>
           </div>

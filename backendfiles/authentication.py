@@ -18,8 +18,8 @@ jwt = JWTManager(app)
 # Database connection setup
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
+        host="10.1.7.137",
+        user="bhuvan",
         password="1234",
         database="ticketing_system_db"
     )
