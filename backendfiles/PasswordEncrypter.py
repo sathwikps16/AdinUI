@@ -1,8 +1,7 @@
 
 from cryptography.fernet import Fernet
 
-class PasswordEncrypter:
-    # Hard-coded base64-encoded 32-byte key  
+class PasswordEncrypter:     
 
     @classmethod
     def load_key(cls):
