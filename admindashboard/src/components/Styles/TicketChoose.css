@@ -1,0 +1,11 @@
+.TicketChoose-main-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.TicketChoose-container {
+    margin-bottom: 10rem;
+}
+

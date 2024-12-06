@@ -4,11 +4,11 @@ import Header from './components/Header';
 import Nav from './components/Nav';
 import Main from './components/Main';
 import KnowledgeBase from './components/KnowledgeBase';
-import TicketSystem from './components/TicketSystem'
-// import TicketChoose from './components/TicketChoose';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { MyContextProvider } from './components/MyContext';  
+import ServiceNow from './components/Ticketing System/ServiceNow'
+import ZenDesk from './components/Ticketing System/ZenDesk'
 import TicketChoose from './components/TicketChoose';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { MyContextProvider } from './components/MyContext'; 
 
 function App() {
   return (
@@ -21,8 +21,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Main />} />
               <Route path="/knowledge-base" element={<KnowledgeBase />} />
-              {/* <Route path="/ticket-choose" element={<TicketChoose />} /> */}
-              <Route path="/ticket-system" element={<TicketSystem />} />
+              <Route path="/ticket-choose" element={<TicketChoose />} /> 
+              <Route path="/ServiceNow" element={<ServiceNow />} />
+              <Route path="/ZenDesk" element={<ZenDesk />} />
             </Routes>
           </div>
         </div>

@@ -38,10 +38,10 @@ const Nav = () => {
                         <img
                             src={ticket}
                             className="nav-img"
-                            alt="Ticketing System"
+                            alt="Integrations"
                         />
-                        <Link to="/ticket-system" style={{ textDecoration: 'none', color: 'black' }}>
-                            <h3 style={{ margin: 0, cursor: 'pointer' }}>Ticketing System</h3>
+                        <Link to="/ticket-choose" style={{ textDecoration: 'none', color: 'black' }}>
+                            <h3 style={{ margin: 0, cursor: 'pointer' }}>Integrations</h3>
                         </Link>
                     </div>
                 </div>
