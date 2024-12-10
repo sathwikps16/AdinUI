@@ -5,29 +5,24 @@ from flask_jwt_extended import (
     jwt_required, get_jwt_identity
 )
 import requests
-import sqlite3
+import mysql.connector
+from PasswordHassher import PasswordEncrypter
 
 app = Flask(__name__)
 CORS(app)
 
 # Configuration for JWT
-app.config['JWT_SECRET_KEY'] = '1234'  
+app.config['JWT_SECRET_KEY'] = '1234'
 jwt = JWTManager(app)
 
-# Database setup
-def init_db():
-    conn = sqlite3.connect('ticketing_connections.db')
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS connections
-                 (id INTEGER PRIMARY KEY, 
-                  system TEXT, 
-                  instance_url TEXT, 
-                  username TEXT, 
-                  created_at DATETIME DEFAULT CURRENT_TIMESTAMP)''')
-    conn.commit()
-    conn.close()
-
-init_db()
+# Database connection setup
+def get_db_connection():
+    return mysql.connector.connect(
+        host="10.1.7.137",
+        user="bhuvan",
+        password="1234",
+        database="ticketing_system_db"
+    )
 
 # Authentication validator for ServiceNow
 def validate_servicenow_credentials(username, password):
@@ -63,7 +58,8 @@ def authenticate():
             "success": True,
             "message": "Authentication successful",
             "token": access_token,
-            "instances": message_or_instances
+            "instances": message_or_instances,
+            "password": password  # Pass the password for the save request
         }), 200
 
     return jsonify({"success": False, "message": message_or_instances}), 401
@@ -75,18 +71,26 @@ def save():
     instance_url = data.get("instance_url")
     system = data.get("system")
     username = get_jwt_identity()
+    password = data.get("password")  # Password from the authenticate step
+    # hash_pass = PasswordEncrypter.hash_password(password) 
 
-    if not all([instance_url, system]):
-        return jsonify({"success": False, "message": "Missing instance URL or system"}), 400
+    if not all([instance_url, system, password]):
+        return jsonify({"success": False, "message": "Missing instance URL, system, or password"}), 400
 
-    conn = sqlite3.connect('ticketing_connections.db')
-    c = conn.cursor()
-    c.execute("INSERT INTO connections (system, instance_url, username) VALUES (?, ?, ?)",
-              (system, instance_url, username))
-    conn.commit()
-    conn.close()
-
-    return jsonify({"success": True, "message": "Data saved successfully"}), 200
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        query = """
+            INSERT INTO Ticketing_System (Service_name, Instance_URL, Admin_ID, Password)
+            VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(query, (system, instance_url, username, password))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True, "message": "Data saved successfully"}), 200
+    except mysql.connector.Error as err:
+        return jsonify({"success": False, "message": f"Database error: {err}"}), 500            
 
 if __name__ == "__main__":
     app.run(debug=True)
+

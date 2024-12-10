@@ -1,0 +1,107 @@
+/* ServiceNow.css */
+
+.ticket-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f4f9;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.ticket-container h1 {
+    font-size: 2rem;
+    color: #333333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.credentials-step {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px 40px;
+    width: 400px;
+    max-width: 90%;
+}
+
+.credentials-step label {
+    display: block;
+    font-size: 1rem;
+    color: #555555;
+    margin-bottom: 10px;
+}
+
+.credentials-step input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    outline: none;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+}
+
+.credentials-step input:focus {
+    border-color: #007bff;
+}
+
+.credentials-step .error-message {
+    color: #ff4d4f;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.spinner {
+    font-size: 1rem;
+    color: #555555;
+    text-align: center;
+}
+
+button {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+}
+
+.save-step {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.save-step button {
+    width: auto;
+    padding: 10px 20px;
+    background-color: #28a745;
+}
+
+.save-step button:hover {
+    background-color: #218838;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 500px) {
+    .credentials-step {
+        padding: 20px;
+    }
+
+    button {
+        font-size: 0.9rem;
+    }
+}

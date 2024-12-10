@@ -1,0 +1,11 @@
+.MainTicketChooseContainer {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    height: 100vh; /* Full viewport height */
+    margin-left:500px;
+  }
+  
+  .TicketChoose-container{
+    align-items: center;
+    margin-top: 100px;
+  }
