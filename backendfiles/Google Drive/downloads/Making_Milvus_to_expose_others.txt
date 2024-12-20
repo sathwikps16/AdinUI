@@ -1,0 +1,165 @@
+Let me help you format and modify your docker-compose.yml file to make it accessible from other machines. Here's the properly formatted and modified version:
+
+```yaml
+version: '3.5'
+
+services:
+  milvus-etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.5
+    environment:
+      - ETCD_ADVERTISE_CLIENT_URLS=http://milvus-etcd:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    volumes:
+      - ./volumes/etcd:/etcd
+    ports:
+      - "2379:2379"
+    networks:
+      - milvus-network
+
+  milvus-minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2022-03-17T06-34-49Z
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - ./volumes/minio:/minio_data
+    command: minio server /minio_data
+    ports:
+      - "9000:9000"
+    networks:
+      - milvus-network
+
+  milvus-standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.3.0
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: milvus-etcd:2379
+      MINIO_ADDRESS: milvus-minio:9000
+      PROXY_PORT: "19530"
+      PROXY_HOST: "0.0.0.0"
+    volumes:
+      - ./volumes/milvus:/var/lib/milvus
+    ports:
+      - "19530:19530"
+    depends_on:
+      - milvus-etcd
+      - milvus-minio
+    networks:
+      - milvus-network
+
+networks:
+  milvus-network:
+    name: milvus-network
+```
+
+Key changes I made:
+1. Fixed the formatting (your file had some spaces missing)
+2. Added `PROXY_HOST: "0.0.0.0"` to the milvus-standalone environment variables
+3. Ensured all services are on the same network
+4. Made sure ports are exposed without localhost binding
+
+To use this:
+
+1. Save this modified configuration
+2. Restart your containers:
+```bash
+docker-compose down
+docker-compose up -d
+```
+
+3. Get your computer's IP address:
+- On Linux/Mac: `ifconfig` or `ip addr`
+- On Windows: `ipconfig`
+
+4. Others can then connect using:
+```python
+from pymilvus import connections
+
+connections.connect(
+    alias="default", 
+    host="YOUR_IP_ADDRESS",  # Replace with your actual IP
+    port="19530"
+)
+```
+
+Additional steps you might need:
+1. Make sure your firewall allows incoming connections on port 19530
+2. If using a cloud VM, configure security groups/firewall rules to allow incoming traffic on port 19530
+
+For security, consider:
+- Changing the default MinIO credentials
+- Setting up a VPN or SSH tunnel for secure access
+- Using Milvus authentication features if available in your version
+
+Would you like me to explain any of these steps in more detail?
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Code to get the values from the database:
+
+
+from pymilvus import connections, Collection, utility
+import numpy as np
+
+# Connect to Milvus
+connections.connect(
+    alias="default", 
+    host="10.1.7.137",
+    port="19530"
+)
+
+try:
+    # List all collections first
+    print("Available collections:", utility.list_collections())
+    
+    # Load your collection
+    collection_name = "your_collection_name"  # Replace with your actual collection name
+    collection = Collection(collection_name)
+    
+    # Load collection into memory (required before search)
+    collection.load()
+    
+    # 1. Basic Info
+    print(f"\nCollection '{collection_name}' info:")
+    print("Schema:", collection.schema)
+    print("Number of entities:", collection.num_entities)
+    
+    # 2. Vector Search Example
+    search_vector = np.random.rand(1, 768)  # Replace 768 with your vector dimension
+    search_params = {
+        "metric_type": "L2",
+        "params": {"nprobe": 10}
+    }
+    
+    results = collection.search(
+        data=[search_vector[0].tolist()],
+        anns_field="vector_field",  # Replace with your vector field name
+        param=search_params,
+        limit=5,
+        output_fields=["*"]  # Return all fields
+    )
+    
+    # Print search results
+    for hits in results:
+        for hit in hits:
+            print(f"ID: {hit.id}, Distance: {hit.distance}, Entity: {hit.entity}")
+    
+    # 3. Get entities by ID
+    ids = [1, 2, 3]  # Replace with actual IDs you want to retrieve
+    entities = collection.query(
+        expr=f"id in {ids}",
+        output_fields=["*"]
+    )
+    print("\nQueried entities:", entities)
+    
+except Exception as e:
+    print("Error:", e)
+finally:
+    # Release collection from memory
+    collection.release()
+    # Close connection
+    connections.disconnect("default")
+    print("\nConnection closed")

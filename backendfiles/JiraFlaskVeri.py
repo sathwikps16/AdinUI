@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 from EnDe import PasswordEncrypter
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # MongoDB connection
 client = MongoClient("mongodb+srv://net-bot:test123@cluster0.uuwhk.mongodb.net/")  
